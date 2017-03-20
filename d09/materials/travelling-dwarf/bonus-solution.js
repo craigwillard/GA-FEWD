@@ -10,14 +10,14 @@ var x = 0,
     };
 
 /**
- * Ensure the dwarf is not going backwards
+ * Determines whether the dwarf's next move will take him backwards
  */
 function goingBackwards() {
     return lastPositionCoordinates.x === nextSquareCoordinates.x && lastPositionCoordinates.y === nextSquareCoordinates.y ;
 }
 
 /**
- * Move the dwarf and increment the appropriate axis value
+ * Move the dwarf and increment the appropriate axis variable's value
  */
 function moveDwarf() {
     lastPositionCoordinates.x = x;
@@ -42,7 +42,7 @@ function moveDwarf() {
 }
 
 /**
- * Move the dwarf forward based on its current orientation
+ * Determine the next square the dwarf will move to, based on its current orientation
  */
 function nextSquare() {
     var newX = x,
@@ -50,7 +50,7 @@ function nextSquare() {
 
     switch( d.orientation ) {
         case "right":
-            newX = Math.max( 0, x+1 );
+            newX = Math.max( 0, x+1 ); // the app will throw an error if we try to move to a negative axis, so ensure we don't but rounding to zero
             break;
         case "left":
             newX = Math.max( 0, x-1 );
@@ -70,7 +70,7 @@ function nextSquare() {
 }
 
 /**
- * Turn the dwarf counter-clockwise (because we are going left to right and don't want to go backwards) based on its current orientation
+ * Turn the dwarf based on its current orientation, to be used if we encounter an obstacle
  */
 function reOrient() {
     switch( d.orientation ) {
@@ -89,6 +89,7 @@ function reOrient() {
     }
 }
 
+// Keep going until we are adjacent to the green square
 while( nextSquare() !== 'color green' ) {
     if ( goingBackwards() || typeof nextSquare() === 'string' ) {
         reOrient();
