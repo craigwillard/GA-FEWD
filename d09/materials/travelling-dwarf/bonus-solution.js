@@ -1,37 +1,99 @@
-console.log("WRITE YOUR SOLUTION IN HERE!");
+var x = 0,
+    y = 0,
+    lastPositionCoordinates = {
+        x: 0,
+        y: 0
+    },
+    nextSquareCoordinates = {
+        x: -1,
+        y: -1
+    };
 
-var coords = 0;
-
-var horBox = 1;
-
-while (g.at(horBox,0) === (0)) {
-  d.move();
-  coords = coords + 1;
-  horBox = horBox + 1;
-} if (g.at(horBox, 0) === "color grey") {
-  d.orient("down");
+/**
+ * Ensure the dwarf is not going backwards
+ */
+function goingBackwards() {
+    return lastPositionCoordinates.x === nextSquareCoordinates.x && lastPositionCoordinates.y === nextSquareCoordinates.y ;
 }
 
-var coords = 0;
+/**
+ * Move the dwarf and increment the appropriate axis value
+ */
+function moveDwarf() {
+    lastPositionCoordinates.x = x;
+    lastPositionCoordinates.y = y;
 
-var verBox = 1;
+    d.move();
 
-while (g.at(4,verBox) === (0)) {
-  d.move();
-  coords = coords + 1;
-  verBox = verBox + 1;
-} if (g.at(4, verBox) === "color grey") {
-  d.orient("right");
+    switch( d.orientation ) {
+        case "right":
+            x++;
+            break;
+        case "left":
+            x--;
+            break;
+        case "up":
+            y--;
+            break;
+        case "down":
+            y++;
+            break;
+    }
 }
 
-var coords = 0;
+/**
+ * Move the dwarf forward based on its current orientation
+ */
+function nextSquare() {
+    var newX = x,
+        newY = y;
 
-var horBox = 0;
+    switch( d.orientation ) {
+        case "right":
+            newX = Math.max( 0, x+1 );
+            break;
+        case "left":
+            newX = Math.max( 0, x-1 );
+            break;
+        case "up":
+            newY = Math.max( 0, y-1 );
+            break;
+        case "down":
+            newY = Math.max( 0, y+1 );
+            break;
+    }
 
-while (g.at(horBox,0) === (0)) {
-  d.move();
-  coords = coords + 1;
-  horBox = horBox + 1;
-} if (g.at(horBox, 0) === "color grey") {
-  d.orient("up");
+    nextSquareCoordinates.x = newX;
+    nextSquareCoordinates.y = newY;
+
+    return g.at( newX, newY );
+}
+
+/**
+ * Turn the dwarf counter-clockwise (because we are going left to right and don't want to go backwards) based on its current orientation
+ */
+function reOrient() {
+    switch( d.orientation ) {
+        case "right":
+            d.orient('up');
+            break;
+        case "left":
+            d.orient('down');
+            break;
+        case "up":
+            d.orient('left');
+            break;
+        case "down":
+            d.orient('right');
+            break;
+    }
+}
+
+while( nextSquare() !== 'color green' ) {
+    if ( goingBackwards() || typeof nextSquare() === 'string' ) {
+        reOrient();
+    }
+    else {
+        moveDwarf()
+    }
 }
