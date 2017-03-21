@@ -11,6 +11,7 @@ var x = 0,
 
 /**
  * Determines whether the dwarf's next move will take him backwards
+ * @returns {boolean}
  */
 function goingBackwards() {
     return lastPositionCoordinates.x === nextSquareCoordinates.x && lastPositionCoordinates.y === nextSquareCoordinates.y ;
@@ -43,6 +44,7 @@ function moveDwarf() {
 
 /**
  * Determine the next square the dwarf will move to, based on its current orientation
+ * @returns {string|number}
  */
 function nextSquare() {
     var newX = x,
@@ -50,7 +52,7 @@ function nextSquare() {
 
     switch( d.orientation ) {
         case "right":
-            newX = Math.max( 0, x+1 ); // the app will throw an error if we try to move to a negative axis, so ensure we don't but rounding to zero
+            newX = Math.max( 0, x+1 ); // the app will throw an error if we try to move to a negative value, so ensure we don't by rounding to zero
             break;
         case "left":
             newX = Math.max( 0, x-1 );
